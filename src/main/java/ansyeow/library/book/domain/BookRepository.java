@@ -4,5 +4,5 @@ import java.util.Optional;
 
 public interface BookRepository {
     Optional<Book> findById(Long id);
-    void store(Book book);
+    Book store(Book book);
 }

@@ -1,28 +1,36 @@
 package ansyeow.library.book.domain;
 
+import ansyeow.library.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
 
 @Service
-public class BookService {
+public class BookServiceImpl implements BookService {
     @Autowired
     private BookIsbnRepository bookIsbnRepository;
     @Autowired
     private BookRepository bookRepository;
 
-    void registerNewBook(BookIsbn newBookIsbn) {
+    public Book registerNewBook(BookIsbn newBookIsbn) {
         final Optional<BookIsbn> dbBookIsbnOpt =
                 bookIsbnRepository.findByIsbn(newBookIsbn.isbn());
-        if (!dbBookIsbnOpt.isPresent()) {
+
+        if (dbBookIsbnOpt.isEmpty()) {
             bookIsbnRepository.store(newBookIsbn);
+        } else {
+            Assert.isTrue(newBookIsbn.equals(dbBookIsbnOpt.get()),
+                    "2 books with the same ISBN numbers must " +
+                            "have the same title and same author");
         }
+
         final Book newBook = new Book(null, newBookIsbn);
-        bookRepository.store(newBook);
+        return bookRepository.store(newBook);
     }
 
-    Optional<Book> findById(Long id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 }
