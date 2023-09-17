@@ -31,7 +31,7 @@ public class CheckOutServiceImpl implements CheckOutService {
         Assert.isTrue(bookOpt.isPresent(), "Book not found. bookId: " + bookId);
 
         final Optional<CheckOut> checkOutOpt =
-                checkOutRepository.findByBookId(bookId);
+                checkOutRepository.findByBook(bookOpt.get(), borrowerOpt);
         Assert.isTrue(checkOutOpt.isEmpty(), "Book already checked-out. checkOut: " + checkOutOpt.get());
 
         final CheckOut newCheckOut =
@@ -40,8 +40,14 @@ public class CheckOutServiceImpl implements CheckOutService {
     }
 
     public void returnBook(Long borrowerId, Long bookId) {
+        Optional<Borrower> borrowerOpt = borrowerService.findById(borrowerId);
+        Assert.isTrue(borrowerOpt.isPresent(), "Borrower not found. borrowerId: " + borrowerId);
+
+        Optional<Book> bookOpt = bookService.findById(bookId);
+        Assert.isTrue(bookOpt.isPresent(), "Book not found. bookId: " + bookId);
+
         final Optional<CheckOut> checkOutOpt =
-            checkOutRepository.findByBookId(bookId);
+            checkOutRepository.findByBook(bookOpt.get(), borrowerOpt);
         Assert.isTrue(checkOutOpt.isPresent(), "Check-out not found");
 
         final Long checkOutBorrowerId = checkOutOpt.get().borrower().id();
