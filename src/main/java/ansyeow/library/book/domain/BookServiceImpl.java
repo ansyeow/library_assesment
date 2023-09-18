@@ -15,6 +15,7 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Override
     public Book registerNewBook(BookIsbn newBookIsbn) {
         final Optional<BookIsbn> dbBookIsbnOpt =
                 bookIsbnRepository.findByIsbn(newBookIsbn.isbn());
@@ -31,6 +32,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.store(newBook);
     }
 
+    @Override
     public Optional<Book> findById(Long id) {
         return bookRepository.findById(bookIsbnRepository, id);
     }

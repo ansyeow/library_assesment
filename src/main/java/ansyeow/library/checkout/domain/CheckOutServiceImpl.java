@@ -23,6 +23,7 @@ public class CheckOutServiceImpl implements CheckOutService {
     @Autowired
     private CheckOutHistoryRepository checkOutHistoryRepository;
 
+    @Override
     public void checkOutBook(Long borrowerId, Long bookId) {
         Optional<Borrower> borrowerOpt = borrowerService.findById(borrowerId);
         Assert.isTrue(borrowerOpt.isPresent(), "Borrower not found. borrowerId: " + borrowerId);
@@ -39,6 +40,7 @@ public class CheckOutServiceImpl implements CheckOutService {
         checkOutRepository.store(newCheckOut);
     }
 
+    @Override
     public void returnBook(Long borrowerId, Long bookId) {
         Optional<Borrower> borrowerOpt = borrowerService.findById(borrowerId);
         Assert.isTrue(borrowerOpt.isPresent(), "Borrower not found. borrowerId: " + borrowerId);
